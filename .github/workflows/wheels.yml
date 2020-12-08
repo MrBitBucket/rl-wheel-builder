@@ -1,0 +1,65 @@
+name: Wheels
+
+on: [push]
+
+env:
+  REPO_DIR: reportlab
+  MACOSX_DEPLOYMENT_TARGET: "10.10"
+  WHEEL_SDIR: wheelhouse
+  MULTIBUILD_REV: "8882150df6529658700b66bec124dfb77eefca26"
+  MULTIBUILD_DIR: multibuild
+  CONFIG_PATH: "${GITHUB_WORKSPACE}/.travis-config.sh"
+  UNICODE_WIDTH: 32
+  BUILD_DEPENDS: ""
+  TEST_DEPENDS: "pillow pyphen"
+  RLCACHE: "manylinux/reportlab"
+
+jobs:
+  build:
+    name: ${{ matrix.python }} ${{ matrix.os-name }} ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: ["ubuntu-16.04","macos-latest"]
+        python: ["3.6", "3.7", "3.8", "3.9" ]
+        platform: ["x86_64", "i686"]
+        exclude:
+          - os: "macos-latest"
+            platform: "i686"
+        include:
+          - os: "macos-latest"
+            os-name: "osx"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+    env:
+      BUILD_COMMIT: HEAD
+      PLAT: ${{ matrix.platform }}
+      MB_PYTHON_VERSION: ${{ matrix.python }}
+      TRAVIS_OS_NAME: ${{ matrix.os-name }}
+    steps:
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Build Wheel
+        run: .github/workflows/build.sh
+      # Uncomment to get SSH access for testing
+      # - name: Setup tmate session
+      #   if: failure()
+      #   uses: mxschmitt/action-tmate@v3
+  upload:
+    name: upload
+    needs: [build]
+    steps:
+      - name: setup python for upload
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: upload wheels
+        env:
+          CITOOLS_USER: ${{ secrets.CITOOLS_USERNAME }}
+          CITOOLS_PASSWORD: ${{ secrets.CITOOLS_PASSWORD }}
+        run: |
+            python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
+            python -mrl_ci_tools upload-caches --subdir="$RLCACHE" --verbosity=1 "${GITHUB_WORKSPACE}/${WHEEL_SDIR}"/*.whl
+            python -mrl_ci_tools email --subject="github wheels uploaded" --body="github uploaded $(ls -1 "${GITHUB_WORKSPACE}/${WHEEL_SDIR}"/*.whl|wc -l) wheels"
