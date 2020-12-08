@@ -42,7 +42,9 @@ jobs:
         with:
           python-version: 3.9
       - name: Build Wheel
-        run: .github/workflows/build.sh
+        run: |
+          env
+          ${GITHUB_WORKSPACE}/.github/workflows/build.sh
       # Uncomment to get SSH access for testing
       # - name: Setup tmate session
       #   if: failure()
