@@ -50,6 +50,7 @@ jobs:
   upload:
     name: upload
     needs: [build]
+    runs-on: ubuntu-latest
     steps:
       - name: setup python for upload
         uses: actions/setup-python@v2
