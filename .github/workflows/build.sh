@@ -45,3 +45,8 @@ echo "::endgroup::"
 echo "::group::Test wheel"
 	install_run $PLAT
 echo "::endgroup::"
+
+echo "::group::Test wheel"
+	python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
+	python -mrl_ci_tools upload-caches --subdir="$RLCACHE" --verbosity=1 ./wheelhouse/*.whl
+echo "::endgroup::"

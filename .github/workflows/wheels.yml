@@ -8,7 +8,7 @@ env:
   WHEEL_SDIR: wheelhouse
   MULTIBUILD_REV: "8882150df6529658700b66bec124dfb77eefca26"
   MULTIBUILD_DIR: multibuild
-  CONFIG_PATH: "${{GITHUB_WORKSPACE}}/.travis-config.sh"
+  CONFIG_PATH: .travis-config.sh
   UNICODE_WIDTH: 32
   BUILD_DEPENDS: ""
   TEST_DEPENDS: "pillow pyphen"
@@ -45,18 +45,21 @@ jobs:
         with:
           python-version: 3.9
       - name: Build Wheel
+        env:
+          CITOOLS_USER: "${{secrets.CITOOLS_USERNAME}}"
+          CITOOLS_PASSWORD: "${{secrets.CITOOLS_PASSWORD}}"
         run: |
           echo "##############################"
           ls
           echo "##############################"
           env
           echo "##############################"
-          ${{GITHUB_WORKSPACE}}/.github/workflows/build.sh
+          .github/workflows/build.sh
       # Uncomment to get SSH access for testing
       # - name: Setup tmate session
       #   if: failure()
       #   uses: mxschmitt/action-tmate@v3
-  upload:
+  email:
     name: upload
     needs: [build]
     runs-on: ubuntu-latest
@@ -67,9 +70,8 @@ jobs:
           python-version: 3.9
       - name: upload wheels
         env:
-          CITOOLS_USER: ${{ secrets.CITOOLS_USERNAME }}
-          CITOOLS_PASSWORD: ${{ secrets.CITOOLS_PASSWORD }}
+          CITOOLS_USER: "${{ secrets.CITOOLS_USERNAME }}"
+          CITOOLS_PASSWORD: "${{ secrets.CITOOLS_PASSWORD }}"
         run: |
-            python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
-            python -mrl_ci_tools upload-caches --subdir="$RLCACHE" --verbosity=1 "${{GITHUB_WORKSPACE}}/${{WHEEL_SDIR}}"/*.whl
-            python -mrl_ci_tools email --subject="github wheels uploaded" --body="github uploaded $(ls -1 "${{GITHUB_WORKSPACE}}/${{WHEEL_SDIR}}"/*.whl|wc -l) wheels"
+	        python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
+            python -mrl_ci_tools email --subject="github wheels uploaded" --body="github wheels uploaded uploaded"
