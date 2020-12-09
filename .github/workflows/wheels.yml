@@ -15,7 +15,7 @@ env:
 
 jobs:
   build:
-    name: ${{matrix.python}} ${{matrix.os-name}} ${{matrix.platform}} ${{matrix.mb-ms-ver}} ${{matrix.unicode-width}}
+    name: ${{matrix.python}} ${{matrix.os-name}} ${{matrix.platform}} ${{matrix.mb-ml-ver}} ${{matrix.unicode-width}}
     runs-on: ${{matrix.os}}
     strategy:
       fail-fast: true
@@ -39,8 +39,26 @@ jobs:
             os-name: "xenial"
             python: "2.7"
             unicode-width: 16
-            platform: ["i686", "x86_64"]
-            mb-ml-ver: ["1", "2010"]
+            platform: "i686"
+            mb-ml-ver: "1"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+            python: "2.7"
+            unicode-width: 16
+            platform: "i686"
+            mb-ml-ver: "2010"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+            python: "2.7"
+            unicode-width: 16
+            platform: "x86_64"
+            mb-ml-ver: "1"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+            python: "2.7"
+            unicode-width: 16
+            platform: "x86_64"
+            mb-ml-ver: "2010"
     env:
       BUILD_COMMIT: HEAD
       PLAT: ${{ matrix.platform }}
