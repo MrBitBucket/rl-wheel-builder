@@ -14,7 +14,24 @@ env:
   RLCACHE: "manylinux/reportlab"
 
 jobs:
+  clear-cache:
+    name: email
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup python for clear-cache
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: clear
+        env:
+          CITOOLS_USER: "${{secrets.CITOOLS_USER}}"
+          CITOOLS_PASSWORD: "${{secrets.CITOOLS_PASSWORD}}"
+        run: |
+            python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
+            python -mrl_ci_tools clear-cache "${{RLCACHE}}"
+            echo "cleared remote cache for ${{RLCACHE}}"
   build:
+    needs: [clear-cache]
     name: ${{matrix.python}} ${{matrix.os-name}} ${{matrix.platform}} ${{matrix.mb-ml-ver}} ${{matrix.unicode-width}}
     runs-on: ${{matrix.os}}
     strategy:
@@ -84,7 +101,7 @@ jobs:
       #   if: failure()
       #   uses: mxschmitt/action-tmate@v3
   email:
-    name: upload
+    name: email
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -92,7 +109,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: upload wheels
+      - name: email confirmation
         env:
           CITOOLS_USER: "${{secrets.CITOOLS_USER}}"
           CITOOLS_PASSWORD: "${{secrets.CITOOLS_PASSWORD}}"
