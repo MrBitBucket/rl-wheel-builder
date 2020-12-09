@@ -73,5 +73,5 @@ jobs:
           CITOOLS_USER: "${{ secrets.CITOOLS_USERNAME }}"
           CITOOLS_PASSWORD: "${{ secrets.CITOOLS_PASSWORD }}"
         run: |
-	        python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
+            python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
             python -mrl_ci_tools email --subject="github wheels uploaded" --body="github wheels uploaded uploaded"
