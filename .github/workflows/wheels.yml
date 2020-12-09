@@ -24,7 +24,7 @@ jobs:
         python: ["2.7", "3.6", "3.7", "3.8", "3.9" ]
         platform: ["x86_64", "i686"]
         unicode-width: [32]
-        mb-ml-ver: ["1", "2010"
+        mb-ml-ver: ["1", "2010"]
         exclude:
           - os: "macos-latest"
             platform: "i686"
