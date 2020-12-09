@@ -18,12 +18,6 @@ if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
 	brew remove --ignore-dependencies webp zstd xz libtiff
 fi
 
-if [ -n "${CONFIG_PATH}" ]; then
-	if [ -n "$(dirname ${CONFIG_PATH})" ]; then
-		CONFIG_PATH="${GITHUB_WORKSPACE}/${CONFIG_PATH}"
-	fi
-fi
-
 if [[ "$MB_PYTHON_VERSION" == "pypy3.6-7.3" ]]; then
 	if [[ "$TRAVIS_OS_NAME" != "macos-latest" ]]; then
 		MB_ML_VER="2010"
