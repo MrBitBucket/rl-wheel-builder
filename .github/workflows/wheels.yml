@@ -15,8 +15,8 @@ env:
 
 jobs:
   build:
-    name: ${{ matrix.python }} ${{ matrix.os-name }} ${{ matrix.platform }}
-    runs-on: ${{ matrix.os }}
+    name: ${{matrix.python}} ${{matrix.os-name}} ${{matrix.platform}} ${{matrix.mb-ms-ver}} ${{matrix.unicode-width}}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: true
       matrix:
@@ -28,6 +28,8 @@ jobs:
         exclude:
           - os: "macos-latest"
             platform: "i686"
+          - os: "macos-latest"
+            mb-ml-ver: "1"
         include:
           - os: "macos-latest"
             os-name: "osx"
@@ -37,12 +39,8 @@ jobs:
             os-name: "xenial"
             python: "2.7"
             unicode-width: 16
-            platform: "i686"
-          - os: "ubuntu-16.04"
-            os-name: "xenial"
-            python: "2.7"
-            unicode-width: 16
-            platform: "x86_64"
+            platform: ["i686", "x86_64"]
+            mb-ml-ver: ["1", "2010"]
     env:
       BUILD_COMMIT: HEAD
       PLAT: ${{ matrix.platform }}
