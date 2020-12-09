@@ -49,11 +49,6 @@ jobs:
           CITOOLS_USER: "${{secrets.CITOOLS_USERNAME}}"
           CITOOLS_PASSWORD: "${{secrets.CITOOLS_PASSWORD}}"
         run: |
-          echo "##############################"
-          ls
-          echo "##############################"
-          env
-          echo "##############################"
           .github/workflows/build.sh
       # Uncomment to get SSH access for testing
       # - name: Setup tmate session

@@ -1,8 +1,16 @@
-if [ ! -d reportlab ]; then
-	git clone https://github.com/MrBitBucket/reportlab-mirror
+#!/bin/bash
+echo "######################################################"
+env
+echo "######################################################"
+ls -a1
+echo "######################################################"
+set -e
+set -x
+if [ ! -d "$REPO_DIR" ]; then
+	git clone https://github.com/MrBitBucket/reportlab-mirror "$REPO_DIR"
 fi
 if [ ! -d multibuild ]; then
-	git clone https://github.com/matthew-brett/multibuild
+	git clone https://github.com/matthew-brett/multibuild multibuild
 	(
 	cd multibuild
 	git checkout "$MULTIBUILD_REV"
@@ -46,7 +54,7 @@ echo "::group::Test wheel"
 	install_run $PLAT
 echo "::endgroup::"
 
-echo "::group::Test wheel"
+echo "::group::upload"
 	python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
 	python -mrl_ci_tools upload-caches --subdir="$RLCACHE" --verbosity=1 ./wheelhouse/*.whl
 echo "::endgroup::"
