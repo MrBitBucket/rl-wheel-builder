@@ -9,7 +9,6 @@ env:
   MULTIBUILD_REV: "8882150df6529658700b66bec124dfb77eefca26"
   MULTIBUILD_DIR: multibuild
   CONFIG_PATH: .travis-config.sh
-  UNICODE_WIDTH: 32
   BUILD_DEPENDS: ""
   TEST_DEPENDS: "pillow pyphen"
   RLCACHE: "manylinux/reportlab"
@@ -22,8 +21,10 @@ jobs:
       fail-fast: true
       matrix:
         os: ["ubuntu-16.04","macos-latest"]
-        python: ["3.6", "3.7", "3.8", "3.9" ]
+        python: ["2.7", "3.6", "3.7", "3.8", "3.9" ]
         platform: ["x86_64", "i686"]
+        unicode-width: [32]
+        mb-ml-ver: ["1", "2010"
         exclude:
           - os: "macos-latest"
             platform: "i686"
@@ -32,11 +33,23 @@ jobs:
             os-name: "osx"
           - os: "ubuntu-16.04"
             os-name: "xenial"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+            python: "2.7"
+            unicode-width: 16
+            platform: "i686"
+          - os: "ubuntu-16.04"
+            os-name: "xenial"
+            python: "2.7"
+            unicode-width: 16
+            platform: "x86_64"
     env:
       BUILD_COMMIT: HEAD
       PLAT: ${{ matrix.platform }}
       MB_PYTHON_VERSION: ${{ matrix.python }}
       TRAVIS_OS_NAME: ${{ matrix.os-name }}
+      UNICODE_WIDTH: ${{ matrix.unicode-width }}
+      MB_ML_VER: ${{ matrix.mb-ml-ver }}
     steps:
       - uses: actions/checkout@v2
         with:
