@@ -3,6 +3,7 @@ name: Wheels
 on: [push]
 
 env:
+  GIT_REPO: "MrBitBucket/reportlab"
   REPO_DIR: reportlab
   MACOSX_DEPLOYMENT_TARGET: "10.10"
   WHEEL_SDIR: wheelhouse
@@ -11,11 +12,11 @@ env:
   CONFIG_PATH: .travis-config.sh
   BUILD_DEPENDS: ""
   TEST_DEPENDS: "pillow pyphen"
-  RLCACHE: "manylinux/reportlab"
+  RLCACHE: "manylinux/rl-wheel-builder"
 
 jobs:
   clear-cache:
-    name: email
+    name: clear-cache
     runs-on: ubuntu-latest
     steps:
       - name: setup python for clear-cache
@@ -115,4 +116,9 @@ jobs:
           CITOOLS_PASSWORD: "${{secrets.CITOOLS_PASSWORD}}"
         run: |
             python -mpip install --no-cache https://hg.reportlab.com/hg-public/rl-ci-tools/archive/tip.tar.gz -U
-            python -mrl_ci_tools email --subject="github wheels uploaded to $RLCACHE" --body="github wheels uploaded  to $RLCACHE"
+            BODY="$(python -mrl_ci_tools cache-info --subdir="$RLCACHE" '*.whl')"
+            NUPLOADS=$(expr $(echo "$BODY" | wc -l) - 1)
+            SUBJECT="$NUPLOADS $(basename $RLCACHE) wheels uploaded to $RLCACHE by github"
+            python -mrl_ci_tools email --subject="$SUBJECT" --body="$BODY"
+            echo "$SUBJECT"
+            echo "$BODY"

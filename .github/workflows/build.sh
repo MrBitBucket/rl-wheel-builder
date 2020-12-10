@@ -7,7 +7,7 @@ echo "######################################################"
 set -e
 set -x
 if [ ! -d "$REPO_DIR" ]; then
-	git clone https://github.com/MrBitBucket/reportlab-mirror "$REPO_DIR"
+	git clone https://github.com/"$GIT_REPO" "$REPO_DIR"
 fi
 if [ ! -d multibuild ]; then
 	git clone https://github.com/matthew-brett/multibuild multibuild
