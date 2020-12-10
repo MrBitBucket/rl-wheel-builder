@@ -3,7 +3,7 @@ name: Wheels
 on: [push]
 
 env:
-  GIT_REPO: "MrBitBucket/reportlab"
+  GIT_REPO: "MrBitBucket/reportlab-mirror"
   REPO_DIR: reportlab
   MACOSX_DEPLOYMENT_TARGET: "10.10"
   WHEEL_SDIR: wheelhouse
